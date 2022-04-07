@@ -34,3 +34,12 @@
 | GET    | /favorites/ | retrieve all favorites            ||
 | GET    | /favorite/questions | retrieve all favorited questions            ||
 | GET    | /favorite/answers | retrieve all favorited answers            ||
+
+<hr>
+
+| col 1 | col 2 | col 3 |
+|-|-|-|
+|text|text|yes|
+|text|text|yes|
+|text|text|yes|
+|text|text|yes|
