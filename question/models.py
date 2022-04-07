@@ -23,7 +23,7 @@ class Question(models.Model):
         return self.name
 
     def save(self):
-        self.slug = slugify(self.name)
+        self.slug = slugify(self.title)
         super().save()
 
 class Answer(models.Model):
@@ -38,5 +38,5 @@ class Answer(models.Model):
         return self.name
 
     def save(self):
-        self.slug = slugify(self.name)
+        self.slug = slugify(self.answer)
         super().save()
