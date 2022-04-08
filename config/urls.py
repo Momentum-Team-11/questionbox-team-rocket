@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from questionbox import views
 
 urlpatterns = [
@@ -23,5 +23,6 @@ urlpatterns = [
     path('questions/', views.QuestionList.as_view(), name='question-list'),
     path('answers/', views.AllAnswerList.as_view(), name='answer-list'),
     path('answer/<int:answer_pk>', views.ChangeAnswer.as_view(), name='answer-detail'),
-    path('', views.api_root)
+    path('', views.api_root),
+    path('auth/', include('djoser.urls.authtoken')),
 ]
