@@ -10,6 +10,13 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 class QuestionSerializer(serializers.ModelSerializer):
+    # user = serializers.SlugRelatedField(slug_field='username')
+
+    user = serializers.SerializerMethodField()
+
+    def get_user(self, obj):
+        return obj.user.username
+    
     class Meta:
         model = Question
         fields = (
@@ -22,6 +29,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         )
 
 class AnswerSerializer(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(slug_field='username')
     class Meta:
         model = Answer
         fields = (
