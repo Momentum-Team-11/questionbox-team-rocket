@@ -37,6 +37,9 @@ https://questionbox-rocket.herokuapp.com/
 | GET    | /questions/   | get a list of all questions                    ||
 | GET    | /questions/:user_id/ | get a list of all questions the user has posted |slug/pk later?|
 | GET    | /answers/ | return all the answers a user has given as well as the question they were to  ||
+| GET    | /answer/:A_id |return details about an individual answer||
+| POST    | /answer/:A_id |change details about an individual answer||
+| DELETE    | /answer/:A_id |delete details about an individual answer||
 | POST    | /favorite/:Q_id | favorite a question     ||
 | POST    | /favorite/:A_id | favorite a answer     ||
 | DELETE    | /favorite/:Q_id | un-favorite a question     ||
@@ -44,12 +47,3 @@ https://questionbox-rocket.herokuapp.com/
 | GET    | /favorites/ | retrieve all favorites            ||
 | GET    | /favorite/questions | retrieve all favorited questions            ||
 | GET    | /favorite/answers | retrieve all favorited answers            ||
-
-<hr>
-
-| col 1 | col 2 | col 3 |
-|-|-|-|
-|text|text|yes|
-|text|text|yes|
-|text|text|yes|
-|text|text|yes|

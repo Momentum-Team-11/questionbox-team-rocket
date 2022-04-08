@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from questionbox import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('users/', views.UserList.as_view(), name='user-list'),
+    path('questions/', views.QuestionList.as_view(), name='question-list'),
+    path('answers/', views.AllAnswerList.as_view(), name='answer-list'),
+    path('answer/<int:answer_pk>', views.ChangeAnswer.as_view(), name='answer-detail'),
+    path('', views.api_root)
 ]
