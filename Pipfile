@@ -12,6 +12,7 @@ gunicorn = "*"
 django-extensions = "*"
 djangorestframework = "*"
 pygments = "*"
+djoser = "*"
 
 [dev-packages]
 
