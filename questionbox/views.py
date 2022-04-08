@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from .models import User, Question, Answer
 from .serializers import UserSerializer, QuestionSerializer, AnswerSerializer, QuestionAnswerSerializer
 from rest_framework.decorators import api_view
