@@ -10,9 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 class QuestionSerializer(serializers.ModelSerializer):
-    # user = serializers.SlugRelatedField(slug_field='username')
-
-    user = serializers.SerializerMethodField()
+    user = serializers.SlugRelatedField(slug_field='username', read_only=True)
 
     def get_user(self, obj):
         return obj.user.username

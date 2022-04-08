@@ -78,7 +78,7 @@ GET /questions/
       "title": "Color of the Sky",
       "question": "What is the color of the sky?",
       "created": "2022-04-08T02:43:28.460825-05:00",
-      "user": 2,
+      "user": "testuser",
       "favorited": []
   },
 ]
@@ -103,10 +103,10 @@ GET /answers/
       "answer": "Blue",
       "created": "2022-04-08T04:11:44.397450-05:00",
       "question": 1,
-      "user": 2,
+      "user": "testuser",
       "favorited": [],
       "accepted": true
-  },
+  }
 ]
 ```
 
