@@ -29,7 +29,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         )
 
 class AnswerSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(slug_field='username')
+    user = serializers.SlugRelatedField(slug_field='username', read_only=True)
     class Meta:
         model = Answer
         fields = (
