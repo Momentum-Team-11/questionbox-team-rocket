@@ -13,6 +13,7 @@ django-extensions = "*"
 djangorestframework = "*"
 pygments = "*"
 djoser = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 
