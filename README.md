@@ -179,7 +179,7 @@ Does not require authentication.
 
 ### request
 
-```txt
+```
 GET /questions/
 ```
 
