@@ -207,7 +207,7 @@ Requires a user to be registered and logged in.
 
 ### request
 
-```txt
+```
 GET /answers/
 ```
 
@@ -249,7 +249,7 @@ GET /answers/
 
 Username and password are required.
 
-```
+```json
 POST api/auth/users
 
 {
@@ -260,7 +260,7 @@ POST api/auth/users
 
 ### response
 
-```
+```json
 201 Created
 
 {
