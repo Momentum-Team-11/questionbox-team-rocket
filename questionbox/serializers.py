@@ -2,6 +2,9 @@ from .models import Question, Answer, User
 from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
+    '''
+    Serialize Data for the User model
+    '''
     class Meta:
         model = User
         fields = (
@@ -10,6 +13,9 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 class QuestionSerializer(serializers.ModelSerializer):
+    '''
+    Serialize Data for the Question model
+    '''
     user = serializers.SlugRelatedField(slug_field='username', read_only=True)
 
     def get_user(self, obj):
@@ -27,6 +33,9 @@ class QuestionSerializer(serializers.ModelSerializer):
         )
 
 class AnswerSerializer(serializers.ModelSerializer):
+    '''
+    Serialize Data for the Answer model
+    '''
     user = serializers.SlugRelatedField(slug_field='username', read_only=True)
     class Meta:
         model = Answer
@@ -41,6 +50,9 @@ class AnswerSerializer(serializers.ModelSerializer):
         )
 
 class QuestionAnswerSerializer(serializers.ModelSerializer):
+    '''
+    Serialize Data for a Question and all of its Answers
+    '''
     answers = AnswerSerializer(many=True, required=False)
     class Meta:
         model = Question

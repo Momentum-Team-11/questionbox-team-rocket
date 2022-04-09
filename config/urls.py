@@ -27,6 +27,7 @@ urlpatterns = [
     path('users/', views.UserList.as_view(), name='user-list'),
     path('question/', views.UserQuestionView.as_view(), name='question-create-get'),
     path('questions/', views.QuestionList.as_view(), name='question-list'),
-    path('answers/', views.AllAnswerList.as_view(), name='answer-list'),
+    path('answer/', views.UserAnswerView.as_view(), name='answer-create-get'),
+    path('answers/', views.UserAnswerView.as_view(), name='answer-list'),
     path('answer/<int:answer_pk>', views.ChangeAnswer.as_view(), name='answer-detail'),
 ]

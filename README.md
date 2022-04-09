@@ -18,21 +18,27 @@ POST requests with a body should set the `Content-Type` header to `application/j
   - [Models](#models)
   - [Base URL](#base-url)
     - [Endpoints](#endpoints)
-  - [List All Questions](#list-all-questions)
+  - [Create A New Question](#create-a-new-question)
     - [request](#request)
     - [response](#response)
-  - [List All Answers](#list-all-answers)
+  - [Create A New Answer](#create-a-new-answer)
     - [request](#request-1)
     - [response](#response-1)
-  - [Register a new user](#register-a-new-user)
+  - [List All Questions](#list-all-questions)
     - [request](#request-2)
     - [response](#response-2)
-  - [Log In](#log-in)
+  - [List All User's Answers](#list-all-users-answers)
     - [request](#request-3)
     - [response](#response-3)
-  - [Create A New Question](#create-a-new-question)
+  - [Register a new user](#register-a-new-user)
     - [request](#request-4)
     - [response](#response-4)
+  - [Log In](#log-in)
+    - [request](#request-5)
+    - [response](#response-5)
+  - [Template: Get, create, delete something](#template-get-create-delete-something)
+    - [request](#request-6)
+    - [response](#response-6)
 
 
 ## Models
@@ -63,14 +69,14 @@ https://questionbox-rocket.herokuapp.com/
 
 |  Method  |  URL                     |  Description                                              |  Deployed  |  Notes                              |Response|
 | -------- | ------------------------ | --------------------------------------------------------- | ---------- | ----------------------------------- |-|
-|  POST    |  /question/              |  create a new question                                    |            |                                     |just something to verify it went through. Header maybe?|
+|  POST    |  /question/              |  create a new question                                    | Yes| |just something to verify it went through. Header maybe?|
 |  GET     |  /question/:Q_id/        |  returns a question with all the answers answers          |            |  slug/pk later?                     ||
 |  DELETE  |  /question/:Q_id/        |  edit an existing question                                |            |                                     |response feedback|
 |  POST    |  /question/:Q_id/answer  |  create a new answer to a question                        |            |                                     ||
+|  GET     |  /question/   |  get a list of all questions the user has posted          | Yes  |  | working without :U_id, check if ok?|
 |  GET     |  /questions/             |  get a list of all questions                              |  Yes       |                                     ||
-|  GET     |  /questions/:user_slug/    |  get a list of all questions the user has posted          |            |  slugify ||
-|  GET     |  /answers/               |  return a list of all answers in app|  Yes       |  can remove later  ||
-|  GET     |  /answers/:user_slug               |  return answers a user has given and question they're to  |  |  currently returning all questions  |adam needs: question title, question id as well as rest of answer info|
+|  GET     |  /answers/               |  return a list of all of a users answers|  Yes       |  ||
+|  GET     |  /answers/:user_slug               |  may not be needed anymore  | x |  currently returning all questions  |adam needs: question title, question id as well as rest of answer info|
 |  POST    |  /answer/:A_id           |  change details about an individual answer                |            |                                     ||
 |  DELETE  |  /answer/:A_id           |  delete details about an individual answer                |            |                                     ||
 |  POST    |  /favorite/:Q_id         |  favorite a question                                      |            |                                     ||
@@ -83,7 +89,84 @@ https://questionbox-rocket.herokuapp.com/
 
 
 
+<!-------------------------- Create Question ------------------------------>
 
+ ## Create A New Question
+
+### request
+
+User must be logged in order to create a question.
+
+title and question fields are required.
+
+```
+POST /question/
+```
+
+```json
+{
+  "title": "Favorite Band",
+  "question": "What is your favorite band?",
+  "favorited": []
+}
+```
+
+### response
+
+```json
+201 Created
+
+{
+	"pk": 11,
+	"title": "Favorite Band",
+	"question": "What is your favorite band?",
+	"created": "2022-04-09T16:58:51.359484-05:00",
+	"user": "admin",
+	"favorited": []
+}
+
+```
+
+
+<!-------------------------- Create Answer ------------------------------>
+
+ ## Create A New Answer
+
+### request
+
+User must be logged in order to create a answer.
+
+Required Fields: answer, question
+
+```
+POST /answer/
+```
+
+```json
+{
+  "answer": "Nickleback",
+  "question": 6,
+  "favorited": [],
+  "accepted": false
+}
+```
+
+### response
+
+```json
+201 Created
+
+{
+	"pk": 6,
+	"answer": "Nickleback",
+	"created": "2022-04-09T18:10:03.447584-05:00",
+	"question": 6,
+	"user": "admin",
+	"favorited": [],
+	"accepted": false
+}
+
+```
 
 
 
@@ -115,12 +198,12 @@ GET /questions/
 ]
 ```
 
-<!-------------------------- List All Answers ------------------------------>
+<!-------------------------- List All User Answers ------------------------------>
 
 
-## List All Answers
+## List All User's Answers
 
-Does not require authentication.
+Requires a user to be registered and logged in.
 
 ### request
 
@@ -132,15 +215,28 @@ GET /answers/
 
 ```json
 [
-  {
-      "pk": 2,
-      "answer": "Blue",
-      "created": "2022-04-08T04:11:44.397450-05:00",
-      "question": 1,
-      "user": "testuser",
-      "favorited": [],
-      "accepted": true
-  }
+	{
+		"pk": 1,
+		"answer": "Round",
+		"created": "2022-04-07T03:41:46.600077-05:00",
+		"question": 2,
+		"user": "admin",
+		"favorited": [],
+		"accepted": false
+	},
+	{
+		"pk": 5,
+		"answer": "Pickle",
+		"created": "2022-04-09T18:00:10.900412-05:00",
+		"question": 2,
+		"user": "admin",
+		"favorited": [
+			2,
+			3,
+			1
+		],
+		"accepted": false
+	}
 ]
 ```
 
@@ -203,26 +299,22 @@ POST auth/login
 
 
 
-<!-------------------------- Create Question ------------------------------>
+<!-------------------------- Template ------------------------------>
 
- ## Create A New Question
+## Template: Get, create, delete something
 
 ### request
 
-User must be logged in order to create a question.
+User must be logged in order to create a answer.
 
-title and question fields are required.
+fields are required.
 
 ```
-POST /question/
+VERB /urlpath/
 ```
 
 ```json
-{
-  "title": "Favorite Band",
-  "question": "What is your favorite band?",
-  "favorited": []
-}
+
 ```
 
 ### response
@@ -230,10 +322,6 @@ POST /question/
 ```json
 201 Created
 
-{
-  "email": "",
-  "username": "admin",
-  "id": 3
-}
+
 
 ```

@@ -32,6 +32,10 @@ class QuestionList(generics.ListCreateAPIView):
 
 
 class UserQuestionView(generics.ListCreateAPIView): 
+    ''''
+    Create a new Question
+    Return a list of all a Users Questions
+    '''
     serializer_class = QuestionSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['question']
@@ -39,6 +43,23 @@ class UserQuestionView(generics.ListCreateAPIView):
     def get_queryset(self):
         filters = Q(user_id=self.request.user)
         return Question.objects.filter(filters)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class UserAnswerView(generics.ListCreateAPIView): 
+    ''''
+    Create a new Answer
+    Return a list of all a Users Answers
+    '''
+    serializer_class = AnswerSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['answer']
+    
+    def get_queryset(self):
+        filters = Q(user_id=self.request.user)
+        return Answer.objects.filter(filters)
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
