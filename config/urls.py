@@ -17,12 +17,16 @@ from django.contrib import admin
 from django.urls import path, include
 from questionbox import views
 
+
 urlpatterns = [
+    path('', views.api_root),
     path('admin/', admin.site.urls),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
+    path('api-auth/', include('rest_framework.urls')),
     path('users/', views.UserList.as_view(), name='user-list'),
+    path('question/', views.UserQuestionView.as_view(), name='question-create-get'),
     path('questions/', views.QuestionList.as_view(), name='question-list'),
     path('answers/', views.AllAnswerList.as_view(), name='answer-list'),
     path('answer/<int:answer_pk>', views.ChangeAnswer.as_view(), name='answer-detail'),
-    path('', views.api_root),
-    path('auth/', include('djoser.urls.authtoken')),
 ]

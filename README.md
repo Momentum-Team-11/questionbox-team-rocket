@@ -10,6 +10,31 @@ Requests to endpoints requiring authentication should set the `Authorization` he
 POST requests with a body should set the `Content-Type` header to `application/json`.
 
 
+## Table Of Contents
+
+- [Questionbox API](#questionbox-api)
+    - [Required Headers](#required-headers)
+  - [Table Of Contents](#table-of-contents)
+  - [Models](#models)
+  - [Base URL](#base-url)
+    - [Endpoints](#endpoints)
+  - [List All Questions](#list-all-questions)
+    - [request](#request)
+    - [response](#response)
+  - [List All Answers](#list-all-answers)
+    - [request](#request-1)
+    - [response](#response-1)
+  - [Register a new user](#register-a-new-user)
+    - [request](#request-2)
+    - [response](#response-2)
+  - [Log In](#log-in)
+    - [request](#request-3)
+    - [response](#response-3)
+  - [Create A New Question](#create-a-new-question)
+    - [request](#request-4)
+    - [response](#response-4)
+
+
 ## Models
 
 - **User**
@@ -29,37 +54,43 @@ POST requests with a body should set the `Content-Type` header to `application/j
       - favorited: M2M
       - accepted: Bool
 
-### Base URL
+## Base URL
 ```shell
 https://questionbox-rocket.herokuapp.com/
 ```
 
 ### Endpoints
 
-|  Method  |  URL                     |  Description                                              |  Deployed  |  Notes                              |
-| -------- | ------------------------ | --------------------------------------------------------- | ---------- | ----------------------------------- |
-|  POST    |  /question/              |  create a new question                                    |            |                                     |
-|  GET     |  /question/:Q_id/        |  returns a question with all the answers answers          |            |  slug/pk later?                     |
-|  PATCH   |  /question/:Q_id/        |  edit an existing question                                |            |                                     |
-|  DELETE  |  /question/:Q_id/        |  edit an existing question                                |            |                                     |
-|  POST    |  /question/:Q_id/answer  |  create a new answer to a question                        |            |                                     |
-|  DELETE  |  /question/:Q_id/answer  |  delete an answer to a question                           |            |                                     |
-|  GET     |  /questions/             |  get a list of all questions                              |  Yes       |                                     |
-|  GET     |  /questions/:user_id/    |  get a list of all questions the user has posted          |            |  slug/pk later?                     |
-|  GET     |  /answers/               |  return answers a user has given and question they're to  |  Yes       |  currently returning all questions  |
-|  GET     |  /answer/:A_id           |  return details about an individual answer                |            |                                     |
-|  POST    |  /answer/:A_id           |  change details about an individual answer                |            |                                     |
-|  DELETE  |  /answer/:A_id           |  delete details about an individual answer                |            |                                     |
-|  POST    |  /favorite/:Q_id         |  favorite a question                                      |            |                                     |
-|  POST    |  /favorite/:A_id         |  favorite a answer                                        |            |                                     |
-|  DELETE  |  /favorite/:Q_id         |  un-favorite a question                                   |            |                                     |
-|  DELETE  |  /favorite/:A_id         |  un-favorite a answer                                     |            |                                     |
-|  GET     |  /favorites/             |  retrieve all favorites                                   |            |                                     |
-|  GET     |  /favorite/questions     |  retrieve all favorited questions                         |            |                                     |
-|  GET     |  /favorite/answers       |  retrieve all favorited answers                           |            |                                     |
+|  Method  |  URL                     |  Description                                              |  Deployed  |  Notes                              |Response|
+| -------- | ------------------------ | --------------------------------------------------------- | ---------- | ----------------------------------- |-|
+|  POST    |  /question/              |  create a new question                                    |            |                                     |just something to verify it went through. Header maybe?|
+|  GET     |  /question/:Q_id/        |  returns a question with all the answers answers          |            |  slug/pk later?                     ||
+|  DELETE  |  /question/:Q_id/        |  edit an existing question                                |            |                                     |response feedback|
+|  POST    |  /question/:Q_id/answer  |  create a new answer to a question                        |            |                                     ||
+|  GET     |  /questions/             |  get a list of all questions                              |  Yes       |                                     ||
+|  GET     |  /questions/:user_slug/    |  get a list of all questions the user has posted          |            |  slugify ||
+|  GET     |  /answers/               |  return a list of all answers in app|  Yes       |  can remove later  ||
+|  GET     |  /answers/:user_slug               |  return answers a user has given and question they're to  |  |  currently returning all questions  |adam needs: question title, question id as well as rest of answer info|
+|  POST    |  /answer/:A_id           |  change details about an individual answer                |            |                                     ||
+|  DELETE  |  /answer/:A_id           |  delete details about an individual answer                |            |                                     ||
+|  POST    |  /favorite/:Q_id         |  favorite a question                                      |            |                                     ||
+|  POST    |  /favorite/:A_id         |  favorite a answer                                        |            |                                     ||
+|  DELETE  |  /favorite/:Q_id         |  un-favorite a question                                   |            |                                     ||
+|  DELETE  |  /favorite/:A_id         |  un-favorite a answer                                     |            |                                     ||
+|  GET     |  /favorites/             |  retrieve all favorites                                   |            |                                     |see samplejson.json for specific notes|
+|  GET     |  /favorite/questions     |  retrieve all favorited questions                         |            |                                     ||
+|  GET     |  /favorite/answers       |  retrieve all favorited answers                           |            |                                     ||
 
 
-## List all Questions
+
+
+
+
+
+<!-------------------------- List Questions ------------------------------>
+
+
+## List All Questions
 
 Does not require authentication.
 
@@ -84,7 +115,10 @@ GET /questions/
 ]
 ```
 
-## List all Answers
+<!-------------------------- List All Answers ------------------------------>
+
+
+## List All Answers
 
 Does not require authentication.
 
@@ -111,16 +145,9 @@ GET /answers/
 ```
 
 
+<!-------------------------- Register ------------------------------>
 
-
-
-
-
-
-
-
-
-<!-- ## Register a new user
+ ## Register a new user
 
 ### request
 
@@ -130,8 +157,8 @@ Username and password are required.
 POST api/auth/users
 
 {
-  "username": "baby_yoda",
-  "password": "grogu"
+  "username": "admin",
+  "password": "admin"
 }
 ```
 
@@ -142,19 +169,21 @@ POST api/auth/users
 
 {
   "email": "",
-  "username": "baby_yoda",
-  "id": 6
+  "username": "admin",
+  "id": 3
 }
 
 ```
-
+<!-------------------------- LOGIN ------------------------------>
 ## Log In
 
 ### request
 
 ```
 POST auth/login
+```
 
+```json
 {
   "username": "admin",
   "password": "admin"
@@ -164,9 +193,47 @@ POST auth/login
 ### response
 
 ```json
+200 OK
+400 Bad Request
+
 {
   "auth_token": "c312049c7f034a3d1b52eabc2040b46e094ff34c"
 }
-``` -->
+``` 
 
 
+
+<!-------------------------- Create Question ------------------------------>
+
+ ## Create A New Question
+
+### request
+
+User must be logged in order to create a question.
+
+title and question fields are required.
+
+```
+POST /question/
+```
+
+```json
+{
+  "title": "Favorite Band",
+  "question": "What is your favorite band?",
+  "favorited": []
+}
+```
+
+### response
+
+```json
+201 Created
+
+{
+  "email": "",
+  "username": "admin",
+  "id": 3
+}
+
+```
