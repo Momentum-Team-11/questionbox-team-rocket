@@ -67,25 +67,28 @@ https://questionbox-rocket.herokuapp.com/
 
 ### Endpoints
 
-|  Method  |  URL                     |  Description                                              |  Deployed  |  Notes                              |Response|
-| -------- | ------------------------ | --------------------------------------------------------- | ---------- | ----------------------------------- |-|
-|  POST    |  /question/              |  create a new question                                    | Yes| |just something to verify it went through. Header maybe?|
-|  GET     |  /question/:Q_id/        |  returns a question with all the answers answers          |            |  slug/pk later?                     ||
-|  DELETE  |  /question/:Q_id/        |  edit an existing question                                |            |                                     |response feedback|
-|  POST    |  /question/:Q_id/answer  |  create a new answer to a question                        |            |                                     ||
-|  GET     |  /question/   |  get a list of all questions the user has posted          | Yes  |  | working without :U_id, check if ok?|
-|  GET     |  /questions/             |  get a list of all questions                              |  Yes       |                                     ||
-|  GET     |  /answers/               |  return a list of all of a users answers|  Yes       |  ||
-|  GET     |  /answers/:user_slug               |  may not be needed anymore  | x |  currently returning all questions  |adam needs: question title, question id as well as rest of answer info|
-|  POST    |  /answer/:A_id           |  change details about an individual answer                |            |                                     ||
-|  DELETE  |  /answer/:A_id           |  delete details about an individual answer                |            |                                     ||
-|  POST    |  /favorite/:Q_id         |  favorite a question                                      |            |                                     ||
-|  POST    |  /favorite/:A_id         |  favorite a answer                                        |            |                                     ||
-|  DELETE  |  /favorite/:Q_id         |  un-favorite a question                                   |            |                                     ||
-|  DELETE  |  /favorite/:A_id         |  un-favorite a answer                                     |            |                                     ||
-|  GET     |  /favorites/             |  retrieve all favorites                                   |            |                                     |see samplejson.json for specific notes|
-|  GET     |  /favorite/questions     |  retrieve all favorited questions                         |            |                                     ||
-|  GET     |  /favorite/answers       |  retrieve all favorited answers                           |            |                                     ||
+|  Method  |  URL                                             |  Description                                              |  Deployed  |  Notes                              |Response|
+| -------- | ------------------------------------------------ | --------------------------------------------------------- | ---------- | ----------------------------------- |-|
+|  POST    |  [/question/](#create-a-new-question)            |  create a new question                                    |  Yes       | just something to verify it went through. Header maybe?||
+|  GET     |  [/question/:Q_id/](#list-all-users-answers)     |  returns a question with all the answers answers          |  Yes       | slug/pk later?                      ||
+|  DELETE  |  /question/:Q_id/                                |  edit an existing question                                |            |                                     |response feedback|
+|  POST    |  [/question/:Q_id/answer](#create-a-new-answer)  |  create a new answer to a question                        |  Yes       |                                     ||
+|  GET     |  /question/                                      |  get a list of all questions the user has posted          |  Yes       | working without :U_id, check if ok? ||
+|  GET     |  [/questions/](#list-all-questions)              |  get a list of all questions                              |  Yes       |                                     ||
+|  GET     |  /answers/                                       |  return a list of all of a users answers                  |  Yes       |                                     ||
+|  GET     |  /answers/:user_slug                             |  may not be needed anymore                                | x          | currently returning all questions   |adam needs: question title, question id as well as rest of answer info|
+|  POST    |  /answer/:A_id                                   |  change details about an individual answer                |            |                                     ||
+|  DELETE  |  /answer/:A_id                                   |  delete details about an individual answer                |            |                                     ||
+|  POST    |  /favorite/:Q_id                                 |  favorite a question                                      |            |                                     ||
+|  POST    |  /favorite/:A_id                                 |  favorite a answer                                        |            |                                     ||
+|  DELETE  |  /favorite/:Q_id                                 |  un-favorite a question                                   |            |                                     ||
+|  DELETE  |  /favorite/:A_id                                 |  un-favorite a answer                                     |            |                                     ||
+|  GET     |  /favorites/                                     |  retrieve all favorites                                   |            |                                     |see samplejson.json for specific notes|
+|  GET     |  /favorite/questions                             |  retrieve all favorited questions                         |            |                                     ||
+|  GET     |  /favorite/answers                               |  retrieve all favorited answers                           |            |                                     ||
+|  POST     |  [auth/users](#register-a-new-user)             |  register a new user                                      |  Yes       |                                     ||
+|  POST     |  [auth/token/login](#log-in)                          |  login with existing user                                 |  Yes       |                                     ||
+|  POST     |  auth/token/logout/                             |  logout                                                   |  Yes       | needs endpoint description          ||
 
 
 
@@ -250,7 +253,7 @@ GET /answers/
 Username and password are required.
 
 ```json
-POST api/auth/users
+POST auth/users
 
 {
   "username": "admin",
@@ -276,7 +279,7 @@ POST api/auth/users
 ### request
 
 ```
-POST auth/login
+POST auth/token/login
 ```
 
 ```json
