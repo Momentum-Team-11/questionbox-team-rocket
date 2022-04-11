@@ -11,7 +11,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet 
 
 
-
 # =================================================================================
 # VIEWSETS
 # =================================================================================
@@ -31,12 +30,10 @@ class QuestionViewSet(ModelViewSet):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        filters = Q(user_id=self.request.user)
-        return Question.objects.filter(filters)
+        return Question.objects.filter(user_id=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
 
 
 class AnswerViewSet(ModelViewSet):
@@ -53,8 +50,27 @@ class AnswerViewSet(ModelViewSet):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        filters = Q(user_id=self.request.user)
-        return Answer.objects.filter(filters)
+        return Answer.objects.filter(user_id=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class UserViewSet(ModelViewSet):
+    '''
+    List all users:                   GET / users /
+    Retrieve a specific user:         GET / users / {id}
+    Add a new user:                   POST / users /
+    Update an existing user:          PUT / users / {id}
+    Update part of an existing user:  PATCH / users / {id}
+    Remove a user:                    DELETE / users / {id} /
+    '''
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return User.objects.filter(user_id=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

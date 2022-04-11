@@ -36,14 +36,15 @@ class AnswerSerializer(serializers.ModelSerializer):
     '''
     Serialize Data for the Answer model
     '''
+    # user = serializers.PrimaryKeyRelatedField(read_only=True)
     user = serializers.SlugRelatedField(slug_field='username', read_only=True)
     class Meta:
         model = Answer
         fields = (
             "pk",
+            "question",
             "answer",
             "created",
-            "question",
             "user",
             "favorited",
             "accepted",
