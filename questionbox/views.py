@@ -1,14 +1,11 @@
-from django.shortcuts import render
-from rest_framework import generics, viewsets
+from rest_framework import generics
 from .models import User, Question, Answer
 from .serializers import UserSerializer, QuestionSerializer, AnswerSerializer, QuestionAnswerSerializer
-from rest_framework.decorators import api_view
-from rest_framework import filters
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
-from django.db.models import Q
 from rest_framework.permissions import AllowAny
-from rest_framework.viewsets import ModelViewSet 
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
+from rest_framework import status
+from rest_framework.response import Response
 
 
 # =================================================================================
@@ -24,6 +21,8 @@ class QuestionViewSet(ModelViewSet):
     Update an existing question:          PUT / questions / {id}
     Update part of an existing question:  PATCH / questions / {id}
     Remove a question:                    DELETE / questions / {id} /
+    Get list of favorited questions:      GET / questions / favorited /
+    Get list of a Users Questions:        GET / questions / user /
     '''
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
@@ -32,9 +31,39 @@ class QuestionViewSet(ModelViewSet):
     # def get_queryset(self):
     #     return Question.objects.filter(user_id=self.request.user)
 
+    def get_queryset(self):
+        '''
+        specify query set
+        '''
+        return Question.objects.all()
+
     def perform_create(self, serializer):
+        '''
+        save the user from the request to the question created
+        '''
         serializer.save(user=self.request.user)
 
+    @action(detail=False, methods=["get"])
+    def favorited(self, request):
+        '''
+        Using this to create a seperate, custom 
+        enpoint for accepted answers accessed at:
+        GET  /questions/favorited/
+        '''
+        questions = self.get_queryset().filter(favorited=True)
+        serializer = self.get_serializer(questions, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def user(self, request):
+        '''
+        Using this to create a seperate, custom 
+        enpoint for only a Users questions
+        GET  /questions/favorited/
+        '''
+        questions = self.get_queryset().filter(user_id=self.request.user)
+        serializer = self.get_serializer(questions, many=True)
+        return Response(serializer.data)
 
 class AnswerViewSet(ModelViewSet):
     '''
@@ -44,20 +73,50 @@ class AnswerViewSet(ModelViewSet):
     Update an existing answer:          PUT / answers / {id}
     Update part of an existing answer:  PATCH / answers / {id}
     Remove a answer:                    DELETE / answers / {id} /
+    Get list of accepted answers:       GET / answers / accepted /
+    Get list of a Users answers:        GET / answers / user /
     '''
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
     permission_classes = [AllowAny]
 
-    # def get_queryset(self):
-    #     return Answer.objects.filter(user_id=self.request.user)
+    def get_queryset(self):
+        '''
+        specify queryset
+        '''
+        # return Answer.objects.filter(user_id=self.request.user)
+        return Answer.objects.all()
 
     def perform_create(self, serializer):
+        '''
+        save the user from the request to the answer created
+        '''
         serializer.save(user=self.request.user)
 
+    @action(detail=False, methods=["get"])
+    def accepted(self, request):
+        '''
+        Using this to create a seperate, custom 
+        enpoint for accepted answers accessed at:
+        GET  /answers/accepted/
+        '''
+        answers = self.get_queryset().filter(accepted=True)
+        serializer = self.get_serializer(answers, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def user(self, request):
+        '''
+        Using this to create a seperate, custom 
+        enpoint for only a Users questions
+        GET  /answers/user/
+        '''
+        answers = self.get_queryset().filter(user_id=self.request.user)
+        serializer = self.get_serializer(answers, many=True)
+        return Response(serializer.data)
 
 # =================================================================================
-# CONCRETE VIEWES
+# CONCRETE VIEWS
 # =================================================================================
 
 
@@ -68,129 +127,3 @@ class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
-
-    
-    
-    
-    
-    
-# class QuestionView(generics.CreateAPIView):
-#     '''
-#     post or get an individual question
-#     '''
-#     queryset = Question.objects.all()
-#     serializer_class = QuestionSerializer
-#     permission_classes = [AllowAny]
-
-#     def get_queryset(self):
-#         filters = Q(user_id=self.request.user)
-#         return Question.objects.filter(filters)
-
-#     def perform_create(self, serializer):
-#         serializer.save(user=self.request.user)
-
-
-# class ModifyQuestionView(generics.RetrieveUpdateDestroyAPIView):
-#     '''
-#     retrieve, update or delete a single question
-#     '''
-#     queryset = Question.objects.all()
-#     serializer_class = QuestionSerializer
-#     permission_classes = [AllowAny]
-
-
-# class ListAllQuestionsView(generics.ListAPIView):
-#     '''
-#     List all questions accross application
-#     '''
-#     queryset = Question.objects.all()
-#     serializer_class = QuestionSerializer
-#     permission_classes = [AllowAny]
-
-
-# class UserQuestionsView(generics.ListAPIView):
-#     '''
-#     List all questions accross application
-#     '''
-#     queryset = Question.objects.all()
-#     serializer_class = QuestionSerializer
-#     permission_classes = [AllowAny]
-
-
-# # =================================================================================
-# # Old Views
-# # =================================================================================
-# class QuestionList(generics.ListCreateAPIView):
-#     '''
-#     Return list of all questions accross all users
-#     '''
-#     queryset = Question.objects.all()
-#     serializer_class = QuestionSerializer
-#     permission_classes = [AllowAny]
-
-
-# class UserQuestionView(generics.ListCreateAPIView): 
-#     ''''
-#     Create a new Question
-#     Return a list of all a Users Questions
-#     '''
-#     serializer_class = QuestionSerializer
-#     permission_classes = [AllowAny]
-#     filter_backends = [filters.SearchFilter]
-#     search_fields = ['question']
-    
-#     def get_queryset(self):
-#         filters = Q(user_id=self.request.user)
-#         return Question.objects.filter(filters)
-    
-#     def perform_create(self, serializer):
-#         serializer.save(user=self.request.user)
-
-
-# class UserAnswerView(generics.ListCreateAPIView): 
-#     ''''
-#     Create a new Answer
-#     Return a list of all a Users Answers
-#     '''
-#     serializer_class = AnswerSerializer
-#     permission_classes = [AllowAny]
-#     filter_backends = [filters.SearchFilter]
-#     search_fields = ['answer']
-    
-#     def get_queryset(self):
-#         filters = Q(user_id=self.request.user)
-#         return Answer.objects.filter(filters)
-    
-#     def perform_create(self, serializer):
-#         serializer.save(user=self.request.user)
-
-
-
-
-# class AllAnswerList(generics.ListCreateAPIView):
-#     '''
-#     Return list of all Answers accross all users
-#     NOTE: Delete this after we start to refine views
-#     '''
-#     queryset = Answer.objects.all()
-#     serializer_class = AnswerSerializer
-#     permission_classes = [AllowAny]
-
-
-# class AnswerList(generics.ListCreateAPIView):
-#     '''
-#     Return a list of all the answers a user has
-#     given as well as the questions they were to
-#     '''
-#     queryset = Answer.objects.all()
-#     serializer_class = AnswerSerializer
-#     permission_classes = [AllowAny]
-
-
-# class ChangeAnswer(generics.RetrieveUpdateDestroyAPIView):
-    # '''
-    # Change details of an answer
-    # '''
-    # queryset = Answer.objects.all()
-    # serializer_class = AnswerSerializer
-    # permission_classes = [AllowAny]
