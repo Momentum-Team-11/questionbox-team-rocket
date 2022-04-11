@@ -49,108 +49,16 @@ class AnswerViewSet(ModelViewSet):
     serializer_class = AnswerSerializer
     permission_classes = [AllowAny]
 
-    def get_queryset(self):
-        return Answer.objects.filter(user_id=self.request.user)
+    # def get_queryset(self):
+    #     return Answer.objects.filter(user_id=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
-
 # =================================================================================
-# Questions - CONCRETE VIEWES
+# CONCRETE VIEWES
 # =================================================================================
-
-
-class QuestionView(generics.CreateAPIView):
-    '''
-    post or get an individual question
-    '''
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
-    permission_classes = [AllowAny]
-
-    def get_queryset(self):
-        filters = Q(user_id=self.request.user)
-        return Question.objects.filter(filters)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
-class ModifyQuestionView(generics.RetrieveUpdateDestroyAPIView):
-    '''
-    retrieve, update or delete a single question
-    '''
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
-    permission_classes = [AllowAny]
-
-
-class ListAllQuestionsView(generics.ListAPIView):
-    '''
-    List all questions accross application
-    '''
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
-    permission_classes = [AllowAny]
-
-
-class UserQuestionsView(generics.ListAPIView):
-    '''
-    List all questions accross application
-    '''
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
-    permission_classes = [AllowAny]
-
-
-# =================================================================================
-# Old Views
-# =================================================================================
-class QuestionList(generics.ListCreateAPIView):
-    '''
-    Return list of all questions accross all users
-    '''
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
-    permission_classes = [AllowAny]
-
-
-class UserQuestionView(generics.ListCreateAPIView): 
-    ''''
-    Create a new Question
-    Return a list of all a Users Questions
-    '''
-    serializer_class = QuestionSerializer
-    permission_classes = [AllowAny]
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['question']
-    
-    def get_queryset(self):
-        filters = Q(user_id=self.request.user)
-        return Question.objects.filter(filters)
-    
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
-class UserAnswerView(generics.ListCreateAPIView): 
-    ''''
-    Create a new Answer
-    Return a list of all a Users Answers
-    '''
-    serializer_class = AnswerSerializer
-    permission_classes = [AllowAny]
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['answer']
-    
-    def get_queryset(self):
-        filters = Q(user_id=self.request.user)
-        return Answer.objects.filter(filters)
-    
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 
 
 class UserList(generics.ListCreateAPIView):
@@ -161,31 +69,128 @@ class UserList(generics.ListCreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
+    
+    
+    
+    
+    
+# class QuestionView(generics.CreateAPIView):
+#     '''
+#     post or get an individual question
+#     '''
+#     queryset = Question.objects.all()
+#     serializer_class = QuestionSerializer
+#     permission_classes = [AllowAny]
 
-class AllAnswerList(generics.ListCreateAPIView):
-    '''
-    Return list of all Answers accross all users
-    NOTE: Delete this after we start to refine views
-    '''
-    queryset = Answer.objects.all()
-    serializer_class = AnswerSerializer
-    permission_classes = [AllowAny]
+#     def get_queryset(self):
+#         filters = Q(user_id=self.request.user)
+#         return Question.objects.filter(filters)
+
+#     def perform_create(self, serializer):
+#         serializer.save(user=self.request.user)
 
 
-class AnswerList(generics.ListCreateAPIView):
-    '''
-    Return a list of all the answers a user has
-    given as well as the questions they were to
-    '''
-    queryset = Answer.objects.all()
-    serializer_class = AnswerSerializer
-    permission_classes = [AllowAny]
+# class ModifyQuestionView(generics.RetrieveUpdateDestroyAPIView):
+#     '''
+#     retrieve, update or delete a single question
+#     '''
+#     queryset = Question.objects.all()
+#     serializer_class = QuestionSerializer
+#     permission_classes = [AllowAny]
 
 
-class ChangeAnswer(generics.RetrieveUpdateDestroyAPIView):
-    '''
-    Change details of an answer
-    '''
-    queryset = Answer.objects.all()
-    serializer_class = AnswerSerializer
-    permission_classes = [AllowAny]
+# class ListAllQuestionsView(generics.ListAPIView):
+#     '''
+#     List all questions accross application
+#     '''
+#     queryset = Question.objects.all()
+#     serializer_class = QuestionSerializer
+#     permission_classes = [AllowAny]
+
+
+# class UserQuestionsView(generics.ListAPIView):
+#     '''
+#     List all questions accross application
+#     '''
+#     queryset = Question.objects.all()
+#     serializer_class = QuestionSerializer
+#     permission_classes = [AllowAny]
+
+
+# # =================================================================================
+# # Old Views
+# # =================================================================================
+# class QuestionList(generics.ListCreateAPIView):
+#     '''
+#     Return list of all questions accross all users
+#     '''
+#     queryset = Question.objects.all()
+#     serializer_class = QuestionSerializer
+#     permission_classes = [AllowAny]
+
+
+# class UserQuestionView(generics.ListCreateAPIView): 
+#     ''''
+#     Create a new Question
+#     Return a list of all a Users Questions
+#     '''
+#     serializer_class = QuestionSerializer
+#     permission_classes = [AllowAny]
+#     filter_backends = [filters.SearchFilter]
+#     search_fields = ['question']
+    
+#     def get_queryset(self):
+#         filters = Q(user_id=self.request.user)
+#         return Question.objects.filter(filters)
+    
+#     def perform_create(self, serializer):
+#         serializer.save(user=self.request.user)
+
+
+# class UserAnswerView(generics.ListCreateAPIView): 
+#     ''''
+#     Create a new Answer
+#     Return a list of all a Users Answers
+#     '''
+#     serializer_class = AnswerSerializer
+#     permission_classes = [AllowAny]
+#     filter_backends = [filters.SearchFilter]
+#     search_fields = ['answer']
+    
+#     def get_queryset(self):
+#         filters = Q(user_id=self.request.user)
+#         return Answer.objects.filter(filters)
+    
+#     def perform_create(self, serializer):
+#         serializer.save(user=self.request.user)
+
+
+
+
+# class AllAnswerList(generics.ListCreateAPIView):
+#     '''
+#     Return list of all Answers accross all users
+#     NOTE: Delete this after we start to refine views
+#     '''
+#     queryset = Answer.objects.all()
+#     serializer_class = AnswerSerializer
+#     permission_classes = [AllowAny]
+
+
+# class AnswerList(generics.ListCreateAPIView):
+#     '''
+#     Return a list of all the answers a user has
+#     given as well as the questions they were to
+#     '''
+#     queryset = Answer.objects.all()
+#     serializer_class = AnswerSerializer
+#     permission_classes = [AllowAny]
+
+
+# class ChangeAnswer(generics.RetrieveUpdateDestroyAPIView):
+    # '''
+    # Change details of an answer
+    # '''
+    # queryset = Answer.objects.all()
+    # serializer_class = AnswerSerializer
+    # permission_classes = [AllowAny]

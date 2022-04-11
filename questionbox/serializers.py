@@ -1,6 +1,7 @@
 from .models import Question, Answer, User
 from rest_framework import serializers
 
+
 class UserSerializer(serializers.ModelSerializer):
     '''
     Serialize Data for the User model
@@ -11,6 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
             "id",
             "username",
         )
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     '''
@@ -32,6 +34,7 @@ class QuestionSerializer(serializers.ModelSerializer):
             "favorited",
         )
 
+
 class AnswerSerializer(serializers.ModelSerializer):
     '''
     Serialize Data for the Answer model
@@ -49,6 +52,7 @@ class AnswerSerializer(serializers.ModelSerializer):
             "favorited",
             "accepted",
         )
+
 
 class QuestionAnswerSerializer(serializers.ModelSerializer):
     '''
