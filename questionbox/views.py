@@ -10,19 +10,6 @@ from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q
 
 
-@api_view(['GET'])
-def api_root(request, format=None):
-    '''
-    Set the root API endpoint
-    Modeled after: https://learndjango.com/tutorials/official-django-rest-framework-tutorial-beginners
-    '''
-    return Response({
-        'users': reverse('user-list', request=request, format=format),
-        'questions': reverse('question-list', request=request, format=format),
-        'answers': reverse('answer-list', request=request, format=format),
-    })
-
-
 class QuestionList(generics.ListCreateAPIView):
     '''
     Return list of all questions accross all users
