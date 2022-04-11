@@ -10,24 +10,10 @@ from django.db.models import Q
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet 
 
-# =================================================================================
-# REFERENCES
-#
-# Concrete Views: https://testdriven.io/blog/drf-views-part-2/#concrete-views
-# ModelViewSets: https://www.laceyhenschel.com/blog/2021/2/22/what-you-should-know-about-drf-part-1-modelviewset-attributes-and-methods
-# =================================================================================
-# What I need:
-# Question create view
-# Answer create view
-# RetrieveUpdateDestroyAPIView for Question --> ModifyQuestionView ?
-# RetrieveUpdateDestroyAPIView for Answer --> ModifyAnswerView ?
-# =================================================================================
-
-
 
 
 # =================================================================================
-# Questions - VIEWSETS
+# VIEWSETS
 # =================================================================================
 
 
@@ -52,6 +38,26 @@ class QuestionViewSet(ModelViewSet):
         serializer.save(user=self.request.user)
 
 
+
+class AnswerViewSet(ModelViewSet):
+    '''
+    List all answers:                   GET / answers /
+    Retrieve a specific answer:         GET / answers / {id}
+    Add a new answer:                   POST / answers /
+    Update an existing answer:          PUT / answers / {id}
+    Update part of an existing answer:  PATCH / answers / {id}
+    Remove a answer:                    DELETE / answers / {id} /
+    '''
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        filters = Q(user_id=self.request.user)
+        return Answer.objects.filter(filters)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 # =================================================================================
