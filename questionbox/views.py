@@ -29,8 +29,8 @@ class QuestionViewSet(ModelViewSet):
     serializer_class = QuestionSerializer
     permission_classes = [AllowAny]
 
-    def get_queryset(self):
-        return Question.objects.filter(user_id=self.request.user)
+    # def get_queryset(self):
+    #     return Question.objects.filter(user_id=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -55,25 +55,6 @@ class AnswerViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-
-class UserViewSet(ModelViewSet):
-    '''
-    List all users:                   GET / users /
-    Retrieve a specific user:         GET / users / {id}
-    Add a new user:                   POST / users /
-    Update an existing user:          PUT / users / {id}
-    Update part of an existing user:  PATCH / users / {id}
-    Remove a user:                    DELETE / users / {id} /
-    '''
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [AllowAny]
-
-    def get_queryset(self):
-        return User.objects.filter(user_id=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 
 
 # =================================================================================
