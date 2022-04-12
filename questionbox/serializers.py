@@ -98,5 +98,6 @@ class QuestionAnswerSerializer(serializers.ModelSerializer):
             "question",
             "created",
             "user",
+            "favorited",
             "answers",
         )
