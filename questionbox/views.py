@@ -6,6 +6,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework import permissions
 
 
 # =================================================================================
@@ -15,7 +16,7 @@ from rest_framework.response import Response
 
 class QuestionViewSet(ModelViewSet):
     '''
-    List all questions:                   GET / questions /
+    List all questions with answers:      GET / questions /
     Retrieve a specific question:         GET / questions / {id}
     Add a new question:                   POST / questions /
     Update an existing question:          PUT / questions / {id}
@@ -26,10 +27,7 @@ class QuestionViewSet(ModelViewSet):
     '''
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    permission_classes = [AllowAny]
-
-    # def get_queryset(self):
-    #     return Question.objects.filter(user_id=self.request.user)
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         '''
@@ -43,14 +41,19 @@ class QuestionViewSet(ModelViewSet):
         '''
         serializer.save(user=self.request.user)
 
+    def get_serializer_class(self):
+        if self.action in ['retrieve']:
+            return QuestionAnswerSerializer
+        return super().get_serializer_class()
+
     @action(detail=False, methods=["get"])
     def favorited(self, request):
         '''
         Using this to create a seperate, custom 
-        enpoint for accepted answers accessed at:
+        enpoint for favorited questions accessed at:
         GET  /questions/favorited/
         '''
-        questions = self.get_queryset().filter(favorited=True)
+        questions = self.get_queryset().filter(favorited=True).filter(user_id=self.request.user)
         serializer = self.get_serializer(questions, many=True)
         return Response(serializer.data)
 
@@ -65,6 +68,7 @@ class QuestionViewSet(ModelViewSet):
         serializer = self.get_serializer(questions, many=True)
         return Response(serializer.data)
 
+
 class AnswerViewSet(ModelViewSet):
     '''
     List all answers:                   GET / answers /
@@ -78,7 +82,7 @@ class AnswerViewSet(ModelViewSet):
     '''
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         '''
@@ -115,6 +119,19 @@ class AnswerViewSet(ModelViewSet):
         serializer = self.get_serializer(answers, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, methods=["get"])
+    def favorited(self, request):
+        '''
+        Using this to create a seperate, custom 
+        enpoint for accepted answers accessed at:
+        GET  /answers/favorited/
+        '''
+        answers = self.get_queryset().filter(favorited=True).filter(user_id=self.request.user)
+        serializer = self.get_serializer(answers, many=True)
+        return Response(serializer.data)
+
+        
+
 # =================================================================================
 # CONCRETE VIEWS
 # =================================================================================
@@ -126,4 +143,4 @@ class UserList(generics.ListCreateAPIView):
     '''
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]

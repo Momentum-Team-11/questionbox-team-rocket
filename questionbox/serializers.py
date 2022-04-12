@@ -54,15 +54,38 @@ class AnswerSerializer(serializers.ModelSerializer):
         )
 
 
+class FavoriteAnswerSerializer(serializers.ModelSerializer):
+    '''
+    Serialize Data for the Answer model
+    '''
+    question = QuestionSerializer(many=False, required=True)
+    user = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    class Meta:
+        model = Answer
+        fields = (
+            "pk",
+            "question",
+            "answer",
+            "created",
+            "user",
+            "favorited",
+            "accepted",
+        )
+
+
 class QuestionAnswerSerializer(serializers.ModelSerializer):
     '''
     Serialize Data for a Question and all of its Answers
     '''
     answers = AnswerSerializer(many=True, required=False)
+    user = serializers.SlugRelatedField(slug_field='username', read_only=True)
     class Meta:
         model = Question
         fields = (
             "pk",
             "title",
+            "question",
+            "created",
+            "user",
             "answers",
         )

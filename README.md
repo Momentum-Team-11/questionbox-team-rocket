@@ -18,6 +18,7 @@ POST requests with a body should set the `Content-Type` header to `application/j
   - [Models](#models)
   - [Base URL](#base-url)
     - [Endpoints](#endpoints)
+  - [Backend Notes](#backend-notes)
   - [Create A New Question](#create-a-new-question)
     - [request](#request)
     - [response](#response)
@@ -36,9 +37,12 @@ POST requests with a body should set the `Content-Type` header to `application/j
   - [Log In](#log-in)
     - [request](#request-5)
     - [response](#response-5)
-  - [Template: Get, create, delete something](#template-get-create-delete-something)
+  - [Log Out](#log-out)
     - [request](#request-6)
     - [response](#response-6)
+  - [Header](#header)
+    - [request](#request-7)
+    - [response](#response-7)
 
 
 ## Models
@@ -65,32 +69,62 @@ POST requests with a body should set the `Content-Type` header to `application/j
 https://questionbox-rocket.herokuapp.com/
 ```
 
+## Backend Notes
+
+|  Method  |  Endpoint  |  Description  |  Deployed  |  Notes  |
+| -------- | ---------- | ------------- | ---------- | ------- |
+|POST|/auth/users/|register a new user|Yes||
+|POST|/auth/token/login/|login with existing user|Yes||
+|POST|/auth/token/logout/|logout with existing user|Yes||
+|GET|/questions/|List all questions|Yes||
+|GET|/questions/{id}|Retrieve a specific question|Yes||
+|POST|/questions/|Add a new question|Yes||
+|PUT|/questions/{id}|Update an existing question|Yes||
+|PATCH|/questions/{id}|Update part of an existing question|Yes||
+|DELETE|/questions/{id}|Delete an existing question|Yes||
+|GET|/questions/favorited/|get list of users favorited questions|Yes||
+|GET|/questions/user/|get list of a users questions|Yes||
+|GET|/answers/|List all answers|Yes||
+|GET|/answers/{id}|Retrieve a specific answer|Yes||
+|POST|/answers/|Add a new answer|Yes||
+|PUT|/answers/{id}|Update an existing answer|Yes||
+|PATCH|/answers/{id}|Update part of an existing answer|Yes||
+|DELETE|/answers/{id}|Delete an existing answer|Yes||
+|GET|/answers/favorited/|get list of users favorited answers|Yes||
+|GET|/answers/user/|get list of a users answers|Yes||
+
+
+
+
+
+
 ### Endpoints
 
-|  Method  |  URL                                             |  Description                                              |  Deployed  |  Notes                              |Response|
-| -------- | ------------------------------------------------ | --------------------------------------------------------- | ---------- | ----------------------------------- |-|
-|  POST    |  [/question/](#create-a-new-question)            |  create a new question                                    |  Yes       | just something to verify it went through. Header maybe?||
-|  GET     |  [/question/:Q_id/](#list-all-users-answers)     |  returns a question with all the answers answers          |  Yes       | slug/pk later?                      ||
-|  DELETE  |  /question/:Q_id/                                |  edit an existing question                                |            |                                     |response feedback|
-|  POST    |  [/question/:Q_id/answer](#create-a-new-answer)  |  create a new answer to a question                        |  Yes       |                                     ||
-|  GET     |  /question/                                      |  get a list of all questions the user has posted          |  Yes       | working without :U_id, check if ok? ||
-|  GET     |  [/questions/](#list-all-questions)              |  get a list of all questions                              |  Yes       |                                     ||
-|  GET     |  /answers/                                       |  return a list of all of a users answers                  |  Yes       |                                     ||
-|  GET     |  /answers/:user_slug                             |  may not be needed anymore                                | x          | currently returning all questions   |adam needs: question title, question id as well as rest of answer info|
-|  POST    |  /answer/:A_id                                   |  change details about an individual answer                |            |                                     ||
-|  DELETE  |  /answer/:A_id                                   |  delete details about an individual answer                |            |                                     ||
-|  POST    |  /favorite/:Q_id                                 |  favorite a question                                      |            |                                     ||
-|  POST    |  /favorite/:A_id                                 |  favorite a answer                                        |            |                                     ||
-|  DELETE  |  /favorite/:Q_id                                 |  un-favorite a question                                   |            |                                     ||
-|  DELETE  |  /favorite/:A_id                                 |  un-favorite a answer                                     |            |                                     ||
-|  GET     |  /favorites/                                     |  retrieve all favorites                                   |            |                                     |see samplejson.json for specific notes|
-|  GET     |  /favorite/questions                             |  retrieve all favorited questions                         |            |                                     ||
-|  GET     |  /favorite/answers                               |  retrieve all favorited answers                           |            |                                     ||
-|  POST     |  [auth/users](#register-a-new-user)             |  register a new user                                      |  Yes       |                                     ||
-|  POST     |  [auth/token/login](#log-in)                          |  login with existing user                                 |  Yes       |                                     ||
-|  POST     |  auth/token/logout/                             |  logout                                                   |  Yes       | needs endpoint description          ||
+|  Method  |  URL                                             |  Description                                      |  Deployed  |  Notes                                                    |  Response                                                                |
+| -------- | ------------------------------------------------ | ------------------------------------------------- | ---------- | --------------------------------------------------------- | ------------------------------------------------------------------------ |
+|  POST    |  [/questions/](#create-a-new-question)           |  create a new question                            |  Yes       |  just something to verify it went through. Header maybe?  |                                                                          |
+|  GET     |  [/questions/:Q_id/](#list-all-users-answers)    |  returns a question with all its answers          |  Yes       |  slug/pk later?                                           |                                                                          |
+|  DELETE  |  /question/:Q_id/                                |  edit an existing question                        |            |                                                           |  response feedback                                                       |
+|  POST    |  [/question/:Q_id/answer](#create-a-new-answer)  |  create a new answer to a question                |  Yes       |                                                           |                                                                          |
+|  GET     |  /question/                                      |  get a list of all questions the user has posted  |  Yes       |  working without :U_id, check if ok?                      |                                                                          |
+|  GET     |  [/questions/](#list-all-questions)              |  get a list of all questions                      |  Yes       |                                                           |                                                                          |
+|  GET     |  /answers/                                       |  return a list of all of a users answers          |  Yes       |                                                           |                                                                          |
+|  GET     |  /answers/:user_slug                             |  may not be needed anymore                        |  x         |  currently returning all questions                        |  adam needs: question title, question id as well as rest of answer info  |
+|  POST    |  /answer/:A_id                                   |  change details about an individual answer        |            |                                                           |                                                                          |
+|  DELETE  |  /answer/:A_id                                   |  delete details about an individual answer        |            |                                                           |                                                                          |
+|  POST    |  /favorite/:Q_id                                 |  favorite a question                              |            |                                                           |                                                                          |
+|  POST    |  /favorite/:A_id                                 |  favorite a answer                                |            |                                                           |                                                                          |
+|  DELETE  |  /favorite/:Q_id                                 |  un-favorite a question                           |            |                                                           |                                                                          |
+|  DELETE  |  /favorite/:A_id                                 |  un-favorite a answer                             |            |                                                           |                                                                          |
+|  GET     |  /favorites/                                     |  retrieve all favorites                           |            |                                                           |  see samplejson.json for specific notes                                  |
+|  GET     |  /favorite/questions                             |  retrieve all favorited questions                 |            |                                                           |                                                                          |
+|  GET     |  /favorite/answers                               |  retrieve all favorited answers                   |            |                                                           |                                                                          |
+|  POST    |  [auth/users](#register-a-new-user)              |  register a new user                              |  Yes       |                                                           |                                                                          |
+|  POST    |  [auth/token/login](#log-in)                     |  login with existing user                         |  Yes       |                                                           |                                                                          |
+|  POST    |  [auth/token/logout/](#log-out)                  |  logout                                           |  Yes       |  needs endpoint description                               |                                                                          |
 
 
+|PUT|/questions/||Yes||
 
 <!-------------------------- Create Question ------------------------------>
 
@@ -129,6 +163,7 @@ POST /question/
 }
 
 ```
+
 
 
 <!-------------------------- Create Answer ------------------------------>
@@ -273,6 +308,7 @@ POST auth/users
 }
 
 ```
+
 <!-------------------------- LOGIN ------------------------------>
 ## Log In
 
@@ -302,18 +338,38 @@ POST auth/token/login
 
 
 
-<!-------------------------- Template ------------------------------>
-
-## Template: Get, create, delete something
+<!-------------------------- LOGOUT ------------------------------>
+## Log Out 
 
 ### request
 
-User must be logged in order to create a answer.
-
-fields are required.
-
 ```
-VERB /urlpath/
+POST auth/token/logout
+```
+
+### response
+
+```txt
+204 No Content
+```
+
+
+
+
+
+
+<!--------------------------- Template ------------------------------>
+
+## Header
+
+### request
+
+User must be logged in 
+
+Required Fields:
+
+```txt
+POST 
 ```
 
 ```json
@@ -322,9 +378,13 @@ VERB /urlpath/
 
 ### response
 
-```json
-201 Created
+```txt
+200 Message
+```
 
+```json
 
 
 ```
+
+
