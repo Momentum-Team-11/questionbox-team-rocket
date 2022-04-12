@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from questionbox import views
-from questionbox.views import AnswerViewSet, QuestionViewSet
+from questionbox.views import AnswerViewSet, QuestionViewSet, QuestionAnswerDetailWithTed
 from rest_framework import routers
 
 
@@ -17,4 +17,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
     path('api-auth/', include('rest_framework.urls')),
     path('users/', views.UserList.as_view(), name='user-list'),
+    path('ted/<int:pk>/', views.QuestionAnswerDetailWithTed.as_view()),
 ]
+
+

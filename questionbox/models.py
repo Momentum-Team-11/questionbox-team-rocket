@@ -22,7 +22,7 @@ class Question(models.Model):
 class Answer(models.Model):
     answer = models.CharField(max_length=1000)
     created = models.DateTimeField(auto_now_add=datetime.now)
-    question = models.ForeignKey(Question, related_name='answer_to_question', on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='questions', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name=("answer_user"), on_delete=models.CASCADE)
     favorited = models.ManyToManyField(User, related_name=("answer_favorited"), blank=True)
     accepted = models.BooleanField(default=False)
