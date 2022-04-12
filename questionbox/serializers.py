@@ -18,8 +18,9 @@ class QuestionSerializer(serializers.ModelSerializer):
     '''
     Serialize Data for the Question model
     '''
-    user_created = serializers.SlugRelatedField(slug_field='username', read_only=True, source='user')
+    # user_created = serializers.SlugRelatedField(slug_field='username', read_only=True, source='user')
     favorited = serializers.SlugRelatedField(slug_field="username", read_only=True, many=True)
+    user = serializers.SlugRelatedField(slug_field='username', read_only=True)
 
     def get_user(self, obj):
         return obj.user.username
@@ -31,7 +32,6 @@ class QuestionSerializer(serializers.ModelSerializer):
             "title",
             "question",
             "user",
-            "user_created",
             "favorited",
         )
 
