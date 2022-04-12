@@ -70,6 +70,7 @@ class FavoriteAnswerSerializer(serializers.ModelSerializer):
     '''
     question = QuestionSerializer(many=False, required=True)
     user = serializers.SlugRelatedField(slug_field='username', read_only=True)
+
     class Meta:
         model = Answer
         fields = (
@@ -89,6 +90,7 @@ class QuestionAnswerSerializer(serializers.ModelSerializer):
     '''
     answers = AnswerSerializer(many=True, required=False, source='questions')
     user = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    favorited = serializers.SlugRelatedField(slug_field="username", read_only=True, many=True)
 
     class Meta:
         model = Question
