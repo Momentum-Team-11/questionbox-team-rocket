@@ -35,6 +35,7 @@ class QuestionSerializer(serializers.ModelSerializer):
             "favorited",
         )
 
+
 class AnswerSerializer(serializers.ModelSerializer):
     '''
     Serialize Data for the Answer model
@@ -81,6 +82,8 @@ class FavoriteAnswerSerializer(serializers.ModelSerializer):
             "favorited",
             "accepted",
         )
+        
+
 
 class QuestionAnswerSerializer(serializers.ModelSerializer):
     '''

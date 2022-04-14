@@ -38,28 +38,30 @@ https://questionbox-rocket.herokuapp.com/
 
 ## API Endpoints
 
-|  Method  |  Endpoint                                                 |  Description                            |  Deployed  |
-| -------- | --------------------------------------------------------- | --------------------------------------- | ---------- |
-|  POST    |  [/auth/users/](#register-a-new-user)                     |  register a new user                    |  Yes       |
-|  POST    |  [/auth/token/login/](#log-in)                            |  login with existing user               |  Yes       |
-|  POST    |  [/auth/token/logout/](#log-out)                          |  logout with existing user              |  Yes       |
-|  GET     |  [/questions/](#list-all-questions)                       |  List all questions                     |  Yes       |
-|  GET     |  [/questions/{id}](#retrieve-a-specific-question)         |  Retrieve a specific question           |  Yes       |
-|  POST    |  [/questions/](#create-a-new-question)                    |  Add a new question                     |  Yes       |
-|  PUT     |  [/questions/{id}](#update-an-existing-question)          |  Update an existing question            |  Yes       |
-|  PATCH   |  [/questions/{id}](#update-an-existing-question)          |  Update part of an existing question    |  Yes       |
-|  DELETE  |  [/questions/{id}](#delete-question)                      |  Delete an existing question            |  Yes       |
-|  GET     |  [/questions/favorited/](#get-users-favorited-questions)  |  get list of users favorited questions  |  Yes       |
-|  GET     |  [/questions/user/](#get-a-list-of-users-questions)       |  get list of a users questions          |  Yes       |
-|  GET     |  [/answers/](#list-all-users-answers)                     |  List all answers                       |  Yes       |
-|  GET     |  [/answers/{id}](#retrieve-a-specific-answer)             |  Retrieve a specific answer             |  Yes       |
-|  POST    |  [/answers/](#create-a-new-answer)                        |  Add a new answer                       |  Yes       |
-|  PUT     |  [/answers/{id}](#update-an-existing-answer)              |  Update an existing answer              |  Yes       |
-|  PATCH   |  [/answers/{id}](#update-an-existing-answer)              |  Update part of an existing answer      |  Yes       |
-|  DELETE  |  [/answers/{id}](#delete-an-existing-answer)              |  Delete an existing answer              |  Yes       |
-|  GET     |  [/answers/favorited/](#list-users-favorited-answers)                                 |  get list of users favorited answers    |  Yes       |
-|  GET     |  [/answers/user/](#list-all-users-answers)                |  get list of a users answers            |  Yes       |
 
+
+|  Method  |  Endpoint  |  Description |  Deployed  |
+| -------- | ---------- | ------------ | ---------- |
+|POST|[/auth/users/](#register-a-new-user)|register a new user|Yes|
+|POST|[/auth/token/login/](#log-in)|login with existing user|Yes|
+|POST|[/auth/token/logout/](#log-out)|logout with existing user|Yes|
+|GET|[/questions/](#list-all-questions)|List all questions|Yes|
+|GET|[/questions/{id}](#retrieve-a-specific-question)|Retrieve a specific question|Yes|
+|POST|[/questions/](#create-a-new-question)|Add a new question|Yes|
+|PUT|[/questions/{id}](#update-an-existing-question)|Update an existing question|Yes|
+|PATCH|[/questions/{id}](#update-an-existing-question)|Update part of an existing question|Yes|
+|DELETE|[/questions/{id}](#delete-question)|Delete an existing question|Yes|
+|GET|[/questions/favorited/](#get-users-favorited-questions)|get list of users favorited questions|Yes|
+|GET|[/questions/user/](#get-a-list-of-users-questions)|get list of a users questions|Yes|
+|GET|[/answers/](#list-all-users-answers)|List all answers|Yes|
+|GET|[/answers/{id}](#retrieve-a-specific-answer)|Retrieve a specific answer|Yes|
+|POST|[/answers/](#create-a-new-answer)|Add a new answer|Yes|
+|PUT|[/answers/{id}](#update-an-existing-answer)|Update an existing answer|Yes|
+|PATCH|[/answers/{id}](#update-an-existing-answer)|Update part of an existing answer|Yes|
+|DELETE|[/answers/{id}](#delete-an-existing-answer)|Delete an existing answer|Yes|
+|GET|[/answers/favorited/](#list-users-favorited-answers)|get list of users favorited answers|Yes|
+|GET|[/answers/accepted/](#list-users-accepted-answers)|get list of answers that have been accepted|Yes|
+|GET|[/answers/user/](#list-all-users-answers)|get list of a users answers|Yes|
 
 
 <!-------------------------- Create Question ------------------------------>
@@ -770,6 +772,83 @@ GET /answers/favorited/
         ],
         "accepted": true
     }
+]
+```
+
+
+
+<!--------------------------- Accepted Answers ------------------------------>
+
+## List users accepted answers
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+User must be logged in 
+
+```txt
+GET /answers/accepted/
+```
+
+### response
+
+```txt
+200 Message
+```
+
+```json
+[
+    {
+        "pk": 9,
+        "question": 12,
+        "answer": "Python and Django",
+        "created": "2022-04-10T23:45:13.128005-05:00",
+        "user": "admin",
+        "favorited": [],
+        "accepted": true
+    },
+    {
+        "pk": 2,
+        "question": 2,
+        "answer": "Flat",
+        "created": "2022-05-07T03:41:46.600077-05:00",
+        "user": "testuser",
+        "favorited": [
+            "testuser2"
+        ],
+        "accepted": true
+    },
+    {
+        "pk": 11,
+        "question": 6,
+        "answer": "ZZ Top",
+        "created": "2022-04-11T00:41:55.284873-05:00",
+        "user": "admin2",
+        "favorited": [
+            "testuser",
+            "testuser2",
+            "admin",
+            "pickles",
+            "admin2"
+        ],
+        "accepted": true
+    },
+    {
+        "pk": 1,
+        "question": 2,
+        "answer": "Round",
+        "created": "2022-04-07T03:41:46.600077-05:00",
+        "user": "admin",
+        "favorited": [
+            "testuser",
+            "testuser2",
+            "admin",
+            "pickles",
+            "admin2"
+        ],
+        "accepted": true
+    },
 ]
 ```
 

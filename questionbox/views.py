@@ -28,7 +28,6 @@ class QuestionViewSet(ModelViewSet):
     serializer_class = QuestionSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-
     def perform_create(self, serializer):
         '''
         save the user from the request to the question created
@@ -126,11 +125,11 @@ class AnswerViewSet(ModelViewSet):
         enpoint for accepted answers accessed at:
         GET  /answers/favorited/
         '''
-        answers = self.get_queryset().filter(favorited=True).filter(user_id=self.request.user)
+        answers = request.user.question_favorited.all()
+        # answers = self.get_queryset().filter(favorited=True).filter(user_id=self.request.user)
         serializer = self.get_serializer(answers, many=True)
         return Response(serializer.data)
 
-        
 
 # =================================================================================
 # CONCRETE VIEWS
