@@ -50,7 +50,6 @@ class AnswerSerializer(serializers.ModelSerializer):
     # favorited = serializers.SlugRelatedField(slug_field='username', read_only='True', source='user', many=True)
     # user = serializers.PrimaryKeyRelatedField(read_only=True)
     
-    
     class Meta:
         model = Answer
         fields = (

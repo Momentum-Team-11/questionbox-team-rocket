@@ -125,7 +125,7 @@ class AnswerViewSet(ModelViewSet):
         enpoint for accepted answers accessed at:
         GET  /answers/favorited/
         '''
-        answers = request.user.question_favorited.all()
+        answers = request.user.answer_favorited.all()
         # answers = self.get_queryset().filter(favorited=True).filter(user_id=self.request.user)
         serializer = self.get_serializer(answers, many=True)
         return Response(serializer.data)
