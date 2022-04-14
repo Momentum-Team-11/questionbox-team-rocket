@@ -1,3 +1,4 @@
+from requests import request
 from rest_framework import generics
 from .models import User, Question, Answer
 from .serializers import UserSerializer, QuestionSerializer, AnswerSerializer, QuestionAnswerSerializer
@@ -7,18 +8,57 @@ from rest_framework.decorators import action
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import permissions
+from rest_framework.generics import RetrieveDestroyAPIView, RetrieveUpdateAPIView
 
 
 # =================================================================================
 # VIEWSETS
 # =================================================================================
 
+# return queryset.filter(reader=self.request.user, book=self.kwargs["book_pk"])
 
-class QuestionAnswerDetailWithTed(generics.RetrieveUpdateDestroyAPIView):
+
+class QuestionDetailView(RetrieveUpdateAPIView):
+    serializer_class = QuestionSerializer
     queryset = Question.objects.all()
-    serializer_class = QuestionAnswerSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class AnswerDetailView(RetrieveUpdateAPIView):
+    serializer_class = AnswerSerializer
+    queryset = Answer.objects.all()
     
+
+class QuestionFavoriteView(ModelViewSet):
+    '''
+    List all questions with answers:      GET / questions /
+    Retrieve a specific question:         GET / questions / {id}
+    Add a new question:                   POST / questions /
+    Update an existing question:          PUT / questions / {id}
+    Update part of an existing question:  PATCH / questions / {id}
+    Remove a question:                    DELETE / questions / {id} /
+    Get list of favorited questions:      GET / questions / favorited /
+    Get list of a Users Questions:        GET / questions / user /
+    '''
+    # questions = self.get_queryset().filter(favorited=True).filter(user_id=self.request.user)
+    # queryset = Question.objects.all().filter(favorited=True)
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=False)
+    def question(self, request):
+        # favorited_questions = Question.objects.filter(favorited=True).filter(user_id=self.request.user)
+        # favorited_questions = Question.objects.filter(favorited=True)
+        favorited_questions = Question.objects.all()
+        serializer = self.get_serializer(favorited_questions, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False)
+    def answer(self, request):
+        favorited_questions = Question.objects.filter(favorited=True).filter(user_id=self.request.user)
+        serializer = self.get_serializer(favorited_questions, many=True)
+        return Response(serializer.data)
+
 
 class QuestionViewSet(ModelViewSet):
     '''
@@ -59,7 +99,8 @@ class QuestionViewSet(ModelViewSet):
         enpoint for favorited questions accessed at:
         GET  /questions/favorited/
         '''
-        questions = self.get_queryset().filter(favorited=True).filter(user_id=self.request.user)
+        # questions = self.get_queryset().filter(user_id=self.request.user)
+        questions = self.get_queryset().filter(favorited=True)
         serializer = self.get_serializer(questions, many=True)
         return Response(serializer.data)
 
