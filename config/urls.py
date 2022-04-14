@@ -7,9 +7,7 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'questions', QuestionViewSet)
-# router.register(r'favorited', QuestionFavoriteView)
 router.register(r'answers', AnswerViewSet)
-
 
 
 urlpatterns = [
