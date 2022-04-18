@@ -81,7 +81,6 @@ class FavoriteAnswerSerializer(serializers.ModelSerializer):
             "favorited",
             "accepted",
         )
-        
 
 
 class QuestionAnswerSerializer(serializers.ModelSerializer):
