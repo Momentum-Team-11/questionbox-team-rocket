@@ -1,93 +1,889 @@
-# Questionbox
+# Questionbox API
 
-This application is a question and answer platform, similar to Stack Overflow. It does _not_ have to be themed to code-related questions, though. Theming and design is up to you.
+This application is an API built with Django REST Framework (DRF) that lets users post questions and answers that they are interested in.
+All requests, except registration and log in, will require authentication
 
-You will likely not be able to do ALL of the listed requirements. That is OK. Decide what the core functionality is and what you can wait to implement once you have the basics done.
+Unregistered users may see posted questions or answers but may not modify, favorite, accept or delete any without registration.
 
-### Back-end: The API
+### Required Headers
 
-Backend devs will build an API using Django and Django REST Framework that allows users to create questions and answers to questions. Question-askers can mark an answer as accepted. Logged-in users can "star" or favorite a question or answer. Your application only needs to serve JSON, not HTML.
+Requests to endpoints requiring authentication should set the `Authorization` header to `Token <token>`, where `<token>` is the token received in the login response.
 
-You will need to make a list of your endpoints available to the front-end devs on your team.
+POST requests with a body should set the `Content-Type` header to `application/json`.
 
-#### Requirements
 
-- Allow an authenticated user to create a question (allowing for long-form text).
-- Allow an authenticated user to create an answer to a question (one question can have many answers).
-- Allow unauthenticated users to view all questions and answers.
-- Have registration and token-based authentication.
-- Allow a user to get a list of all the questions they have posted.
-- Allow a user to get a list of all the answers they have posted.
-- Allow the original author of the question to mark an answer as accepted.
-- Questions cannot be edited once they have been asked (_note_: allowing editing of unanswered questions is listed as an extra challenge).
-- A question can be deleted by its author, whether answered or unanswered. If it is deleted, all associated answers should also be deleted.
-- Users can search the database by supplying a search term. This should use [Django's PostgreSQL full-text search](https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/search/).
-  - At minimum allow a search in the text of a question.
-  - A more comprehensive search would allow searching both questions and answers.
-- Authenticated users can "star" or favorite questions or answers they like. They should also be able to un-star anything that they have starred.
-- Deploy to Heroku.
+## Models
 
-### 🌶️ Spicy features
+- **User**
+- **Question**
+    - Fields
+      - title: TextField
+      - question: CharField
+      - created: DateTimeField
+      - user: FK
+      - favorited: M2M
+- **Answer**
+    - Fields
+      - answer: CharField
+      - created: DateTimeField
+      - question: FK
+      - user: FK
+      - favorited: M2M
+      - accepted: Bool
 
-- Add tags to questions and allow search by tags
-- Allow a user to upload a profile photo.
-  - for Heroku, you'll need to configure a storage backend like Amazon S3 in order to upload files.
-- Allow an unanswered question to be edited.
-- Allow the author of an answer to delete or edit an answer.
+## Base URL
+```shell
+https://questionbox-rocket.herokuapp.com/
+```
 
-### Back-end development notes
+## API Endpoints
 
-You should use [djoser](https://djoser.readthedocs.io/en/latest/) and [token-based authentication](https://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication) to handle registration and login.
 
-### CORS
 
-CORS (Cross-Origin Resource Sharing) headers must be added to your responses for the front-end app to interact with your API. [Read this blog post to find out how to set up CORS](https://www.techiediaries.com/django-cors/). You will want to use django-cors-headers (the second option mentioned in the blog post) and set `CORS_ALLOW_ALL_ORIGINS = True`.
+|  Method  |  Endpoint  |  Description |  Deployed  |
+| -------- | ---------- | ------------ | ---------- |
+|POST|[/auth/users/](#register-a-new-user)|register a new user|Yes|
+|POST|[/auth/token/login/](#log-in)|login with existing user|Yes|
+|POST|[/auth/token/logout/](#log-out)|logout with existing user|Yes|
+|GET|[/questions/](#list-all-questions)|List all questions|Yes|
+|GET|[/questions/{id}](#retrieve-a-specific-question)|Retrieve a specific question|Yes|
+|POST|[/questions/](#create-a-new-question)|Add a new question|Yes|
+|PUT|[/questions/{id}](#update-an-existing-question)|Update an existing question|Yes|
+|PATCH|[/questions/{id}](#update-an-existing-question)|Update part of an existing question|Yes|
+|DELETE|[/questions/{id}](#delete-question)|Delete an existing question|Yes|
+|GET|[/questions/favorited/](#get-users-favorited-questions)|get list of users favorited questions|Yes|
+|GET|[/questions/user/](#get-a-list-of-users-questions)|get list of a users questions|Yes|
+|GET|[/answers/](#list-all-users-answers)|List all answers|Yes|
+|GET|[/answers/{id}](#retrieve-a-specific-answer)|Retrieve a specific answer|Yes|
+|POST|[/answers/](#create-a-new-answer)|Add a new answer|Yes|
+|PUT|[/answers/{id}](#update-an-existing-answer)|Update an existing answer|Yes|
+|PATCH|[/answers/{id}](#update-an-existing-answer)|Update part of an existing answer|Yes|
+|DELETE|[/answers/{id}](#delete-an-existing-answer)|Delete an existing answer|Yes|
+|GET|[/answers/favorited/](#list-users-favorited-answers)|get list of users favorited answers|Yes|
+|GET|[/answers/accepted/](#list-users-accepted-answers)|get list of answers that have been accepted|Yes|
+|GET|[/answers/user/](#list-all-users-answers)|get list of a users answers|Yes|
 
-## Front-End: The React application
 
-The front-end team will build a React application that will send AJAX requests to the QuestionBox API.
+<!-------------------------- Create Question ------------------------------>
 
-This application is a question and answer platform, similar to Stack Overflow in format, but you can theme it and design it however you like. This application should allow logged-in users to ask questions, give and receive answers, and mark an answer as accepted. Users that are not logged in should still be able to view questions and answers, but cannot ask questions, give answers, or mark answers as accepted.
+ ## Create A New Question
 
-### Requirements
+[Back to Endpoints](#api-endpoints)
 
-- Users can create an account.
-- Users can log in.
-- Authenticated users can ask a question.
-  - A question cannot be edited.
-  - A user can delete their own question.
-- Authenticated users can answer a question.
-- Authenticated users can choose an accepted answer among the answers to one of their questions.
-- Authenticated users have a profile page that lists all their questions and answers.
-- Authenticated users can "star" a question or answer they like.
-  - Allow a user to "unstar" something they have previously starred.
-- You will have to route some URLs.
-  - Login and registration should each have a URL, or one for both if they are in the same view.
-  - Questions should have their own route.
-  - User profiles should have their own route.
-  - If implementing pagination, you will likely use routes to implement this.
-- Deploy to Netlify
+### request
 
-### 🌶️ Spicy features
+User must be logged in order to create a question.
 
-Most of these are dependent on whether the API supports these capabilities.
+title and question fields are required.
 
-- Allow users to search the API using a search term.
-  - If your API supports tags, allow search by tags.
-- The list of questions that comes back from the API may be paginated. If so, you should implement pagination in your application.
-- Allow questions to be edited if they have not been answered.
-- Allow users to show only the questions and/or answers they have starred.
-- Allow users to follow/unfollow each other.
-- Allow users to upload a profile photo.
+```
+POST /question/
+```
 
-### Front-end Development notes
+```json
+{
+  "title": "Favorite Band",
+  "question": "What is your favorite band?",
+  "favorited": []
+}
+```
 
-During development, you will want to be able to make requests before the API is complete. You can handle this in a few ways.
+### response
 
-One way is to make functions or methods for all your API calls, but instead of having them actually make the calls at first, have them set the data you are expecting without actually making an API call. Another way is to use the provided exported mock API specification for Mockoon, a tool that will run a mock server for you. In this case, you will want to be able to switch which server you use based on the environment your code is running in.
+```json
+201 Created
 
-You can [read more about approaches to building your front-end before the API is done in this dev.to article](https://dev.to/momentum/how-to-build-a-front-end-app-before-you-have-an-api-3ai3).
+{
+	"pk": 11,
+	"title": "Favorite Band",
+	"question": "What is your favorite band?",
+	"created": "2022-04-09T16:58:51.359484-05:00",
+	"user": "admin",
+	"favorited": []
+}
 
-If you need to switch how you access your data based on environment, read [this article on create-react-app-environments](https://medium.com/@tacomanator/environments-with-create-react-app-7b645312c09d).
+```
 
-You can work with a back-end dev to get the back-end API running on your local machine, but you do not have to.
+
+
+<!-------------------------- Create Answer ------------------------------>
+
+ ## Create A New Answer
+
+[Back to Endpoints](#api-endpoints)
+ 
+
+### request
+
+User must be logged in order to create a answer.
+
+Required Fields: answer, question
+
+```
+POST /answer/
+```
+
+```json
+{
+  "answer": "Nickleback",
+  "question": 6,
+  "favorited": [],
+  "accepted": false
+}
+```
+
+### response
+
+```json
+201 Created
+
+{
+	"pk": 6,
+	"answer": "Nickleback",
+	"created": "2022-04-09T18:10:03.447584-05:00",
+	"question": 6,
+	"user": "admin",
+	"favorited": [],
+	"accepted": false
+}
+
+```
+
+
+
+<!-------------------------- List Questions ------------------------------>
+
+
+## List All Questions
+
+[Back to Endpoints](#api-endpoints)
+
+Does not require authentication.
+
+### request
+
+```
+GET /questions/
+```
+
+### response
+
+```json
+[
+    {
+        "pk": 6,
+        "title": "Favorite Band",
+        "question": "What is your favorite band?",
+        "user": "admin",
+        "favorited": [
+            "testuser2",
+            "admin",
+            "admin2"
+        ]
+    },
+    ,
+    {
+        "pk": 2,
+        "title": "True shape of the Earth",
+        "question": "Is the Earth round or is it really flat?",
+        "user": "admin",
+        "favorited": [
+            "admin"
+        ]
+    },
+    {
+        "pk": 12,
+        "title": "Best Programming Language",
+        "question": "What is the best programming language?",
+        "user": "testuser",
+        "favorited": [
+            "testuser",
+            "testuser2",
+            "admin",
+            "pickles",
+            "admin2"
+        ]
+    },
+]
+```
+
+<!-------------------------- List All User Answers ------------------------------>
+
+
+## List All Users Answers
+
+[Back to Endpoints](#api-endpoints)
+
+Requires a user to be registered and logged in.
+
+### request
+
+```
+GET /answers/
+```
+
+### response
+
+```json
+[
+	{
+		"pk": 1,
+		"answer": "Round",
+		"created": "2022-04-07T03:41:46.600077-05:00",
+		"question": 2,
+		"user": "admin",
+		"favorited": [],
+		"accepted": false
+	},
+	{
+		"pk": 5,
+		"answer": "Pickle",
+		"created": "2022-04-09T18:00:10.900412-05:00",
+		"question": 2,
+		"user": "admin",
+		"favorited": [
+			2,
+			3,
+			1
+		],
+		"accepted": false
+	}
+]
+```
+
+
+<!-------------------------- Register ------------------------------>
+
+## Register a new user
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+Username and password are required.
+
+```json
+POST auth/users
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+```
+
+### response
+
+```json
+201 Created
+
+{
+  "email": "",
+  "username": "admin",
+  "id": 3
+}
+
+```
+
+<!-------------------------- LOGIN ------------------------------>
+## Log In
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+```
+POST auth/token/login
+```
+
+```json
+{
+  "username": "admin",
+  "password": "admin"
+}
+```
+
+### response
+
+```json
+200 OK
+400 Bad Request
+
+{
+  "auth_token": "c312049c7f034a3d1b52eabc2040b46e094ff34c"
+}
+``` 
+
+
+
+<!-------------------------- LOGOUT ------------------------------>
+## Log Out 
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+```
+POST auth/token/logout
+```
+
+### response
+
+```txt
+204 No Content
+```
+
+
+
+<!--------------------------- Get Question ------------------------------>
+
+## Retrieve a specific question
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+User must be user or guest
+
+```txt
+GET /questions/id 
+```
+
+### response
+
+```txt
+200 Message
+```
+
+```json
+
+{
+    "pk": 6,
+    "title": "Favorite Band",
+    "question": "What is your favorite band?",
+    "created": "2022-04-09T16:21:41.800747-05:00",
+    "user": "admin",
+    "favorited": [
+        "testuser2",
+        "admin",
+        "admin2"
+    ],
+    "answers": [
+        {
+            "pk": 7,
+            "question": 6,
+            "answer": "Nickleback",
+            "created": "2022-04-09T18:13:20.262000-05:00",
+            "user": "admin",
+            "favorited": [],
+            "accepted": false
+        },
+        {
+            "pk": 11,
+            "question": 6,
+            "answer": "ZZ Top",
+            "created": "2022-04-11T00:41:55.284873-05:00",
+            "user": "admin2",
+            "favorited": [
+                "testuser",
+                "testuser2",
+                "admin",
+                "pickles",
+                "admin2"
+            ],
+            "accepted": true
+        },
+        {
+            "pk": 12,
+            "question": 6,
+            "answer": "Sublime",
+            "created": "2022-04-11T00:49:23.728945-05:00",
+            "user": "admin2",
+            "favorited": [
+                "pickles"
+            ],
+            "accepted": false
+        }
+    ]
+}
+
+```
+
+<!--------------------------- Update Question ------------------------------>
+
+## Update an existing question
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+User must be logged in 
+
+Required Fields: question
+
+```txt
+PUT /question/id/ 
+```
+
+```json
+{
+    "pk": 6,
+    "title": "Favorite Band",
+    "question": "What is your favorite band?",
+    "user": "admin",
+    "favorited": [
+        "testuser2",
+        "admin",
+        "admin2"
+    ]
+}
+```
+
+### response
+
+```txt
+200 Message
+```
+
+```json
+{
+    "pk": 6,
+    "title": "Favorite Band",
+    "question": "What is your favorite band?",
+    "user": "admin",
+    "favorited": [
+        "testuser2",
+        "admin",
+        "admin2"
+    ]
+}
+
+```
+
+
+<!--------------------------- Delete Question ------------------------------>
+
+## Delete Question
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+User must be logged in 
+
+Required Fields: question
+
+```txt
+DELETE /question/id/
+```
+
+### response
+
+```txt
+204 No Content
+```
+
+
+
+<!--------------------------- Get Favorited ------------------------------>
+
+## Get-users-favorited-questions
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+User must be logged in 
+
+
+```txt
+GET /questions/favorited/
+```
+
+### response
+
+```txt
+200 Message
+```
+
+```json
+[
+    {
+        "pk": 12,
+        "title": "Best Programming Language",
+        "question": "What is the best programming language?",
+        "user": "testuser",
+        "favorited": [
+            "testuser",
+            "testuser2",
+            "admin",
+            "pickles",
+            "admin2"
+        ]
+    },
+    {
+        "pk": 20,
+        "title": "GOAT",
+        "question": "Who is the GOAT?",
+        "user": "admin",
+        "favorited": [
+            "admin2"
+        ]
+    },
+    {
+        "pk": 11,
+        "title": "Favorite Band",
+        "question": "What is your favorite band?",
+        "user": "admin",
+        "favorited": [
+            "admin2"
+        ]
+    },
+    {
+        "pk": 6,
+        "title": "Favorite Band",
+        "question": "What is your favorite band?",
+        "user": "admin",
+        "favorited": [
+            "testuser2",
+            "admin",
+            "admin2"
+        ]
+    }
+]
+```
+
+
+
+<!--------------------------- User Questions List ------------------------------>
+
+## Get a list of users questions
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+User must be logged in 
+
+```txt
+GET /questions/user/ 
+```
+
+### response
+
+```txt
+200 Message
+```
+
+```json
+[
+    {
+        "pk": 2,
+        "title": "True shape of the Earth",
+        "question": "Is the Earth round or is it really flat?",
+        "user": "admin",
+        "favorited": [
+            "admin"
+        ]
+    },
+    {
+        "pk": 12,
+        "title": "Best Programming Language",
+        "question": "What is the best programming language?",
+        "user": "testuser",
+        "favorited": [
+            "testuser",
+            "testuser2",
+            "admin",
+            "pickles",
+            "admin2"
+        ]
+    },
+    {
+        "pk": 6,
+        "title": "Favorite Band",
+        "question": "What is your favorite band?",
+        "user": "admin",
+        "favorited": [
+            "testuser2",
+            "admin",
+            "admin2"
+        ]
+    }
+]
+
+```
+
+
+
+
+<!--------------------------- Get Answer ------------------------------>
+
+## Retrieve a specific answer
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+```txt
+GET /answers/id
+```
+
+### response
+
+```txt
+200 Message
+```
+
+```json
+{
+    "pk": 5,
+    "question": 2,
+    "answer": "Pickle",
+    "created": "2022-04-09T18:00:10.900412-05:00",
+    "user": "admin",
+    "favorited": [
+        "testuser",
+        "testuser2",
+        "admin"
+    ],
+    "accepted": false
+}
+
+```
+
+
+
+<!--------------------------- Change Answer ------------------------------>
+
+## Update an existing answer
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+User must be logged in 
+
+Required Fields: Question, answer
+
+```txt
+PUT /answers/id 
+PATCH /answers/id 
+```
+
+```json
+{
+    "pk": 5,
+    "question": 2,
+    "answer": "Pickle",
+    "created": "2022-04-09T18:00:10.900412-05:00",
+    "user": "admin",
+    "favorited": [
+        "testuser",
+        "testuser2",
+        "admin"
+    ],
+    "accepted": false
+}
+```
+
+### response
+
+```txt
+200 Message
+```
+
+```json
+{
+    "pk": 5,
+    "question": 2,
+    "answer": "Pickle",
+    "created": "2022-04-09T18:00:10.900412-05:00",
+    "user": "admin",
+    "favorited": [
+        "testuser",
+        "testuser2",
+        "admin"
+    ],
+    "accepted": false
+}
+```
+
+
+
+<!--------------------------- Delete Answer ------------------------------>
+
+## Delete an existing answer
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+User must be logged in 
+
+Required Fields:
+
+```txt
+DELETE /answers/id/ 
+```
+
+### response
+
+```txt
+204 No content
+```
+
+
+
+<!--------------------------- Users Favorited Answers ------------------------------>
+
+## List users favorited answers
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+User must be logged in 
+
+
+```txt
+GET /answers/favorited/
+```
+
+### response
+
+```txt
+200 Message
+```
+
+```json
+[
+    {
+        "pk": 11,
+        "question": 6,
+        "answer": "ZZ Top",
+        "created": "2022-04-11T00:41:55.284873-05:00",
+        "user": "admin2",
+        "favorited": [
+            "testuser",
+            "testuser2",
+            "admin",
+            "pickles",
+            "admin2"
+        ],
+        "accepted": true
+    }
+]
+```
+
+
+
+<!--------------------------- Accepted Answers ------------------------------>
+
+## List users accepted answers
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+User must be logged in 
+
+```txt
+GET /answers/accepted/
+```
+
+### response
+
+```txt
+200 Message
+```
+
+```json
+[
+    {
+        "pk": 9,
+        "question": 12,
+        "answer": "Python and Django",
+        "created": "2022-04-10T23:45:13.128005-05:00",
+        "user": "admin",
+        "favorited": [],
+        "accepted": true
+    },
+    {
+        "pk": 2,
+        "question": 2,
+        "answer": "Flat",
+        "created": "2022-05-07T03:41:46.600077-05:00",
+        "user": "testuser",
+        "favorited": [
+            "testuser2"
+        ],
+        "accepted": true
+    },
+    {
+        "pk": 11,
+        "question": 6,
+        "answer": "ZZ Top",
+        "created": "2022-04-11T00:41:55.284873-05:00",
+        "user": "admin2",
+        "favorited": [
+            "testuser",
+            "testuser2",
+            "admin",
+            "pickles",
+            "admin2"
+        ],
+        "accepted": true
+    },
+    {
+        "pk": 1,
+        "question": 2,
+        "answer": "Round",
+        "created": "2022-04-07T03:41:46.600077-05:00",
+        "user": "admin",
+        "favorited": [
+            "testuser",
+            "testuser2",
+            "admin",
+            "pickles",
+            "admin2"
+        ],
+        "accepted": true
+    },
+]
+```
+
+
+
+
+<!--------------------------- Template ------------------------------>
+
+## Header
+
+[Back to Endpoints](#api-endpoints)
+
+### request
+
+User must be logged in 
+
+Required Fields:
+
+```txt
+POST 
+```
+
+```json
+
+```
+
+### response
+
+```txt
+200 Message
+```
+
+```json
+
+
+```
+
+

@@ -1,0 +1,21 @@
+// Sample for get favorites.........................
+{
+    "questions": [
+        // list of individual questions, using the same details as the other question lists returned before
+    ],
+    "answers": [
+        // list of individual answers, using the same details as the other answers lists returned before
+    ]
+}
+
+
+
+Unfavorite a question
+{
+    "username":       (string of the username, which i named 'user' in my models)
+    "question_id":    (this name can match whatever I need)
+}
+
+
+
+
